@@ -1,8 +1,6 @@
-#!/usr/local/bin/python2.7
+#!/usr/local/bin/python3
 # encoding: utf-8
 '''
-vlc.vlc_control -- Controls a local VLC instance via the telnet controller
-
 To run, first startup VLC, load the movies into a playlist and select VLC/Add Interface/Telnet from the menu
 
 @author:     Vlad
