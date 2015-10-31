@@ -24,7 +24,7 @@ __version__ = 0.1
 __date__ = '2012-10-22'
 __updated__ = '2012-10-24'
 
-DEBUG = 0
+DEBUG = 1
 TESTRUN = 0
 PROFILE = 0
 
@@ -85,7 +85,11 @@ def vlc_manipulation_logic(ignore_s, play_s, host, port, passwd):
             print("0 length for", files_in_playlist[playlist_item_no - 1])
             continue
 
-        start_time = random.randint(ignore_s, current_file_length_sec - play_s - ignore_s);
+        max_end = current_file_length_sec - play_s - ignore_s
+        if not max_end > ignore_s:
+            print ("End", max_end, " is not ideally located after start", ignore_s)
+            continue
+        start_time = random.randint(ignore_s, max_end);
         run_vlc_command("seek " + str(start_time))
         while run_vlc_command("is_playing") == "0":
             print("Waiting...")
@@ -158,22 +162,4 @@ USAGE
         return 2
 
 if __name__ == "__main__":
-    if DEBUG:
-        sys.argv.append("-h")
-        sys.argv.append("-v")
-        sys.argv.append("-r")
-    if TESTRUN:
-        import doctest
-        doctest.testmod()
-    if PROFILE:
-        import cProfile
-        import pstats
-        profile_filename = 'vlc.vlc_control_profile.txt'
-        cProfile.run('main()', profile_filename)
-        statsfile = open("profile_stats.txt", "wb")
-        p = pstats.Stats(profile_filename, stream=statsfile)
-        stats = p.strip_dirs().sort_stats('cumulative')
-        stats.print_stats()
-        statsfile.close()
-        sys.exit(0)
     sys.exit(main())
